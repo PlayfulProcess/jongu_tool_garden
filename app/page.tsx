@@ -101,9 +101,9 @@ export default function HomePage() {
 
   const stats = {
     totalTools: tools.length,
-    totalRatings: tools.reduce((sum, tool) => sum + tool.total_ratings, 0),
+    totalRatings: Math.max(tools.reduce((sum, tool) => sum + tool.total_ratings, 0), tools.reduce((sum, tool) => sum + tool.view_count, 0)),
     avgRating: tools.length > 0 
-      ? (tools.reduce((sum, tool) => sum + tool.avg_rating, 0) / tools.length).toFixed(1)
+      ? (tools.reduce((sum, tool) => sum + tool.avg_rating * tool.total_ratings, 0) / Math.max(tools.reduce((sum, tool) => sum + tool.total_ratings, 0), 1)).toFixed(1)
       : '0.0'
   }
 
@@ -120,7 +120,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mb-16">
+        <section id="categories" className="mb-16">
           <div className="container mx-auto px-4">
             <CategoryGrid 
               selectedCategory={selectedCategory}
@@ -129,7 +129,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mb-20">
+        <section id="tools" className="mb-20">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800 text-center">
@@ -157,7 +157,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      <section className="bg-white py-16 mt-16">
+      <section id="submit" className="bg-white py-16 mt-16">
         <div className="container mx-auto px-4">
           <SubmissionForm onSubmit={handleToolSubmit} />
         </div>

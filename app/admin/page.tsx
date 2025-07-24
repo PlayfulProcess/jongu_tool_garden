@@ -8,19 +8,32 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [loading, setLoading] = useState(false)
+  const [adminPassword, setAdminPassword] = useState('')
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Attempting login with password:', password)
-    console.log('Expected password:', process.env.NEXT_PUBLIC_ADMIN_PASSWORD)
+    console.log('Attempting login...')
     
-    if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD || password === 'admin123') {
-      console.log('Login successful, loading submissions...')
-      setIsAuthenticated(true)
-      loadSubmissions()
-    } else {
-      console.log('Login failed')
-      alert('Incorrect password')
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      })
+
+      if (response.ok) {
+        console.log('Login successful, loading submissions...')
+        setAdminPassword(password) // Store for API calls
+        setIsAuthenticated(true)
+        loadSubmissions()
+      } else {
+        const error = await response.json()
+        console.log('Login failed')
+        alert(error.error || 'Incorrect password')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      alert('Login failed. Please try again.')
     }
   }
 
@@ -30,7 +43,7 @@ export default function AdminPage() {
       console.log('Loading submissions...')
       const response = await fetch('/api/admin/submissions', {
         headers: {
-          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || ''
+          'x-admin-password': adminPassword
         }
       })
       
@@ -55,7 +68,7 @@ export default function AdminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || ''
+          'x-admin-password': adminPassword
         },
         body: JSON.stringify({ submissionId })
       })
@@ -79,7 +92,7 @@ export default function AdminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || ''
+          'x-admin-password': adminPassword
         },
         body: JSON.stringify({ submissionId })
       })

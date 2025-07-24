@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     // Simple password check for admin access
     const password = request.headers.get('x-admin-password')
     
-    if (password !== process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+    if (password !== process.env.ADMIN_PASSWORD) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

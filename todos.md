@@ -1,5 +1,8 @@
 # Claude App Store - TODO List
 
+Thumbnails fix
+PEople helped = tools used fix
+
 ## 🔒 Security
 
 ## 🚨 CRITICAL - Before GitHub Public Push:
