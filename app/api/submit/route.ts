@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/supabase'
-import { getClientIP, checkSubmissionLimit } from '@/lib/utils'
+import { getClientIP, checkSubmissionLimit, validateSubmission, sanitizeText } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +15,16 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
+    
+    // Validate and sanitize input
+    const validation = validateSubmission(body)
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: validation.errors },
+        { status: 400 }
+      )
+    }
+
     const {
       title,
       claude_url,
@@ -26,25 +36,19 @@ export async function POST(request: NextRequest) {
       thumbnail_url
     } = body
 
-    // Basic validation
-    if (!title || !claude_url || !category || !description || !creator_name) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+    // Sanitize text inputs
+    const sanitizedData = {
+      title: sanitizeText(title),
+      claude_url: claude_url.trim(),
+      category,
+      description: sanitizeText(description),
+      creator_name: sanitizeText(creator_name),
+      creator_link: creator_link?.trim(),
+      creator_background: creator_background ? sanitizeText(creator_background) : undefined,
+      thumbnail_url: thumbnail_url?.trim()
     }
 
-    const success = await db.submitTool({
-      title,
-      claude_url,
-      category,
-      description,
-      creator_name,
-      creator_link,
-      creator_background,
-      thumbnail_url,
-      submitter_ip: clientIP
-    })
+    const success = await db.submitTool(sanitizedData)
 
     if (success) {
       return NextResponse.json({

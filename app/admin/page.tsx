@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Submission } from '@/lib/types'
-import { db } from '@/lib/supabase'
 
 export default function AdminPage() {
   const [password, setPassword] = useState('')
@@ -12,10 +11,15 @@ export default function AdminPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('Attempting login with password:', password)
+    console.log('Expected password:', process.env.NEXT_PUBLIC_ADMIN_PASSWORD)
+    
     if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD || password === 'admin123') {
+      console.log('Login successful, loading submissions...')
       setIsAuthenticated(true)
       loadSubmissions()
     } else {
+      console.log('Login failed')
       alert('Incorrect password')
     }
   }
@@ -23,10 +27,23 @@ export default function AdminPage() {
   const loadSubmissions = async () => {
     setLoading(true)
     try {
-      const pendingSubmissions = await db.getPendingSubmissions()
-      setSubmissions(pendingSubmissions)
+      console.log('Loading submissions...')
+      const response = await fetch('/api/admin/submissions', {
+        headers: {
+          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || ''
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+      
+      const data = await response.json()
+      console.log('Loaded submissions:', data.count, data.submissions)
+      setSubmissions(data.submissions || [])
     } catch (error) {
       console.error('Error loading submissions:', error)
+      alert('Failed to load submissions: ' + error)
     } finally {
       setLoading(false)
     }
@@ -34,31 +51,49 @@ export default function AdminPage() {
 
   const handleApprove = async (submissionId: string) => {
     try {
-      const success = await db.approveSubmission(submissionId)
-      if (success) {
+      const response = await fetch('/api/admin/approve', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || ''
+        },
+        body: JSON.stringify({ submissionId })
+      })
+      
+      if (response.ok) {
         alert('Tool approved!')
         loadSubmissions()
       } else {
-        alert('Failed to approve tool')
+        const error = await response.json()
+        alert('Failed to approve tool: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error approving submission:', error)
-      alert('Error approving tool')
+      alert('Error approving tool: ' + error)
     }
   }
 
   const handleReject = async (submissionId: string) => {
     try {
-      const success = await db.rejectSubmission(submissionId)
-      if (success) {
+      const response = await fetch('/api/admin/reject', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': process.env.NEXT_PUBLIC_ADMIN_PASSWORD || ''
+        },
+        body: JSON.stringify({ submissionId })
+      })
+      
+      if (response.ok) {
         alert('Tool rejected')
         loadSubmissions()
       } else {
-        alert('Failed to reject tool')
+        const error = await response.json()
+        alert('Failed to reject tool: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error rejecting submission:', error)
-      alert('Error rejecting tool')
+      alert('Error rejecting tool: ' + error)
     }
   }
 

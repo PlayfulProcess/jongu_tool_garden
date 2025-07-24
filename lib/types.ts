@@ -27,7 +27,6 @@ export interface Submission {
   creator_link?: string;
   creator_background?: string;
   thumbnail_url?: string;
-  submitter_ip?: string;
   reviewed: boolean;
   approved: boolean;
   created_at: string;

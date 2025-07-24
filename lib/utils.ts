@@ -15,6 +15,51 @@ export function validateClaudeUrl(url: string): boolean {
   }
 }
 
+export function sanitizeText(text: string): string {
+  return text.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+             .replace(/<[^>]*>?/gm, '')
+             .trim()
+}
+
+export function validateSubmission(data: any): { valid: boolean; errors: string[] } {
+  const errors: string[] = []
+  
+  if (!data.title || data.title.length < 3 || data.title.length > 255) {
+    errors.push('Title must be between 3 and 255 characters')
+  }
+  
+  if (!data.claude_url || !validateClaudeUrl(data.claude_url)) {
+    errors.push('Must be a valid Claude.ai URL')
+  }
+  
+  if (!data.category || !['anxiety', 'mood', 'relationships', 'parenting', 'mindfulness', 'growth'].includes(data.category)) {
+    errors.push('Invalid category')
+  }
+  
+  if (!data.description || data.description.length < 10 || data.description.length > 2000) {
+    errors.push('Description must be between 10 and 2000 characters')
+  }
+  
+  if (!data.creator_name || data.creator_name.length < 2 || data.creator_name.length > 255) {
+    errors.push('Creator name must be between 2 and 255 characters')
+  }
+  
+  if (data.creator_link && !isValidUrl(data.creator_link)) {
+    errors.push('Creator link must be a valid URL')
+  }
+  
+  return { valid: errors.length === 0, errors }
+}
+
+function isValidUrl(url: string): boolean {
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function validateImgurUrl(url: string): boolean {
   try {
     const urlObj = new URL(url)

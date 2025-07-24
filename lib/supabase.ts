@@ -3,8 +3,15 @@ import { Tool, Submission, Rating } from './types'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+})
 
 // Database operations
 export const db = {
@@ -136,13 +143,13 @@ export const db = {
       .eq('id', toolId)
   },
 
-  // Admin functions
+  // Admin functions (using service role)
   async getPendingSubmissions(): Promise<Submission[]> {
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
       return []
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('submissions')
       .select('*')
       .eq('reviewed', false)
@@ -161,8 +168,8 @@ export const db = {
       return false
     }
 
-    // Get the submission
-    const { data: submission, error: fetchError } = await supabase
+    // Get the submission using admin client
+    const { data: submission, error: fetchError } = await supabaseAdmin
       .from('submissions')
       .select('*')
       .eq('id', submissionId)
@@ -173,8 +180,8 @@ export const db = {
       return false
     }
 
-    // Insert into tools table
-    const { error: insertError } = await supabase
+    // Insert into tools table using admin client
+    const { error: insertError } = await supabaseAdmin
       .from('tools')
       .insert({
         title: submission.title,
@@ -193,8 +200,8 @@ export const db = {
       return false
     }
 
-    // Mark submission as reviewed and approved
-    const { error: updateError } = await supabase
+    // Mark submission as reviewed and approved using admin client
+    const { error: updateError } = await supabaseAdmin
       .from('submissions')
       .update({ reviewed: true, approved: true })
       .eq('id', submissionId)
@@ -212,7 +219,7 @@ export const db = {
       return false
     }
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('submissions')
       .update({ reviewed: true, approved: false })
       .eq('id', submissionId)
