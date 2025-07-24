@@ -2,6 +2,17 @@
 
 A community-powered platform for sharing and discovering emotional wellness tools created by therapists, parents, and wellness enthusiasts.
 
+## ⚠️ Security Notice
+
+**This is a development version.** Before deploying to production:
+
+1. **Configure proper environment variables** (never commit `.env.local`)
+2. **Enable Row Level Security in Supabase** (currently disabled for testing)
+3. **Change default admin password** from development settings
+4. **Review all security policies** before public deployment
+
+For production deployment, see the security checklist in [`todos.md`](todos.md).
+
 ## Features
 
 - **Tool Discovery**: Browse tools by category, search, and sort by rating/popularity
