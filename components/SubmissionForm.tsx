@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { SubmissionFormData, CATEGORIES } from '@/lib/types'
 import { validateImgurUrl } from '@/lib/utils'
+import { db } from '@/lib/supabase'
 
 interface SubmissionFormProps {
   onSubmit: (data: SubmissionFormData) => Promise<boolean>;
@@ -21,6 +22,8 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const isValidUrl = (url: string): boolean => {
     try {
@@ -29,6 +32,60 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
     } catch {
       return false
     }
+  }
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+      setErrors(prev => ({ ...prev, thumbnail_upload: 'Please select a valid image file (JPG, PNG, GIF, WebP)' }))
+      return
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, thumbnail_upload: 'Image must be smaller than 5MB' }))
+      return
+    }
+
+    setUploadingImage(true)
+    setErrors(prev => ({ ...prev, thumbnail_upload: '' }))
+
+    try {
+      // Show preview
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
+
+      // Upload to Supabase
+      const result = await db.uploadThumbnail(file)
+      
+      if (result.error) {
+        setErrors(prev => ({ ...prev, thumbnail_upload: result.error }))
+        setImagePreview(null)
+      } else if (result.url) {
+        setFormData(prev => ({ ...prev, thumbnail_url: result.url }))
+        // Clear any existing URL input
+        setErrors(prev => ({ ...prev, thumbnail_url: '' }))
+      }
+    } catch (error) {
+      console.error('Upload error:', error)
+      setErrors(prev => ({ ...prev, thumbnail_upload: 'Failed to upload image. Please try again.' }))
+      setImagePreview(null)
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
+  const clearImage = () => {
+    setFormData(prev => ({ ...prev, thumbnail_url: '' }))
+    setImagePreview(null)
+    setErrors(prev => ({ ...prev, thumbnail_upload: '', thumbnail_url: '' }))
   }
 
   const handleChange = (field: keyof SubmissionFormData, value: string) => {
@@ -234,23 +291,71 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
           <label className="block font-semibold text-gray-700 mb-2">
             Tool Thumbnail (Optional)
           </label>
-          <input
-            type="url"
-            value={formData.thumbnail_url}
-            onChange={(e) => handleChange('thumbnail_url', e.target.value)}
-            placeholder="Direct image link (e.g., https://i.imgur.com/abc123.png)"
-            className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors ${
-              errors.thumbnail_url ? 'border-red-500' : 'border-gray-200 focus:border-primary-500'
-            }`}
-          />
-          <p className="text-gray-500 text-sm mt-1">
-            💡 Upload your image to{' '}
-            <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
-              imgur.com
-            </a>
-            {' '}or another image host and paste the direct link here. Makes your tool stand out!
+          
+          {/* Image Preview */}
+          {imagePreview && (
+            <div className="mb-4 relative">
+              <img 
+                src={imagePreview} 
+                alt="Thumbnail preview" 
+                className="w-32 h-24 object-cover rounded-lg border"
+              />
+              <button
+                type="button"
+                onClick={clearImage}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+              >
+                ×
+              </button>
+            </div>
+          )}
+
+          {/* File Upload */}
+          <div className="mb-4">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={uploadingImage || !!formData.thumbnail_url}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            {uploadingImage && (
+              <div className="flex items-center mt-2 text-sm text-gray-600">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500 mr-2"></div>
+                Uploading image...
+              </div>
+            )}
+            {errors.thumbnail_upload && <p className="text-red-500 text-sm mt-1">{errors.thumbnail_upload}</p>}
+          </div>
+
+          {/* Divider */}
+          {!formData.thumbnail_url && (
+            <div className="flex items-center my-4">
+              <hr className="flex-1 border-gray-300" />
+              <span className="px-3 text-gray-500 text-sm">or paste a URL</span>
+              <hr className="flex-1 border-gray-300" />
+            </div>
+          )}
+
+          {/* URL Input */}
+          {!imagePreview && (
+            <div>
+              <input
+                type="url"
+                value={formData.thumbnail_url}
+                onChange={(e) => handleChange('thumbnail_url', e.target.value)}
+                placeholder="Direct image link (e.g., https://i.imgur.com/abc123.png)"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors ${
+                  errors.thumbnail_url ? 'border-red-500' : 'border-gray-200 focus:border-primary-500'
+                }`}
+              />
+              {errors.thumbnail_url && <p className="text-red-500 text-sm mt-1">{errors.thumbnail_url}</p>}
+            </div>
+          )}
+
+          <p className="text-gray-500 text-sm mt-2">
+            💡 Upload an image directly or paste a link from Imgur, GitHub, etc. Makes your tool stand out!
           </p>
-          {errors.thumbnail_url && <p className="text-red-500 text-sm mt-1">{errors.thumbnail_url}</p>}
         </div>
 
         <button

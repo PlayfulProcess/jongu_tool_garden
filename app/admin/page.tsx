@@ -25,7 +25,7 @@ export default function AdminPage() {
         console.log('Login successful, loading submissions...')
         setAdminPassword(password) // Store for API calls
         setIsAuthenticated(true)
-        loadSubmissions()
+        loadSubmissions(password) // Pass password directly
       } else {
         const error = await response.json()
         console.log('Login failed')
@@ -37,13 +37,15 @@ export default function AdminPage() {
     }
   }
 
-  const loadSubmissions = async () => {
+  const loadSubmissions = async (passwordOverride?: string) => {
     setLoading(true)
     try {
       console.log('Loading submissions...')
+      const passwordToUse = passwordOverride || adminPassword
+      console.log('Using password:', passwordToUse ? 'Yes' : 'No')
       const response = await fetch('/api/admin/submissions', {
         headers: {
-          'x-admin-password': adminPassword
+          'x-admin-password': passwordToUse
         }
       })
       
@@ -75,7 +77,7 @@ export default function AdminPage() {
       
       if (response.ok) {
         alert('Tool approved!')
-        loadSubmissions()
+        loadSubmissions() // adminPassword should be set by now
       } else {
         const error = await response.json()
         alert('Failed to approve tool: ' + (error.error || 'Unknown error'))

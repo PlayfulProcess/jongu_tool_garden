@@ -230,5 +230,61 @@ export const db = {
     }
 
     return true
+  },
+
+  // Storage methods for image uploads
+  async uploadThumbnail(file: File): Promise<{ url: string | null; error: string | null }> {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+      return { url: null, error: 'Supabase not configured' }
+    }
+
+    try {
+      const fileExt = file.name.split('.').pop()?.toLowerCase()
+      const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`
+      
+      // Upload file to storage
+      const { data, error } = await supabase.storage
+        .from('thumbnails')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        })
+
+      if (error) {
+        console.error('Upload error:', error)
+        return { url: null, error: error.message }
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('thumbnails')
+        .getPublicUrl(fileName)
+
+      return { url: publicUrl, error: null }
+    } catch (error) {
+      console.error('Upload error:', error)
+      return { url: null, error: 'Upload failed' }
+    }
+  },
+
+  async deleteThumbnail(url: string): Promise<boolean> {
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !url.includes('supabase.co/storage')) {
+      return false
+    }
+
+    try {
+      // Extract filename from URL
+      const fileName = url.split('/').pop()
+      if (!fileName) return false
+
+      const { error } = await supabase.storage
+        .from('thumbnails')
+        .remove([fileName])
+
+      return !error
+    } catch (error) {
+      console.error('Delete error:', error)
+      return false
+    }
   }
 } 

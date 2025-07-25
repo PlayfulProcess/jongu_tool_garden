@@ -156,6 +156,49 @@ CREATE TRIGGER update_tool_rating_trigger
   AFTER INSERT ON ratings
   FOR EACH ROW
   EXECUTE FUNCTION update_tool_rating();
+
+-- Storage bucket for thumbnails
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('thumbnails', 'thumbnails', true);
+
+-- Storage policies
+CREATE POLICY "Public read access" ON storage.objects
+FOR SELECT USING (bucket_id = 'thumbnails');
+
+-- Allow both anonymous and authenticated uploads (hybrid approach)
+CREATE POLICY "Allow uploads" ON storage.objects 
+FOR INSERT WITH CHECK (
+  bucket_id = 'thumbnails'
+  AND (
+    auth.role() = 'authenticated' 
+    OR auth.role() = 'anon'
+  )
+);
+
+-- Restrict file types for security
+CREATE POLICY "Restrict file types" ON storage.objects 
+FOR INSERT WITH CHECK (
+  bucket_id = 'thumbnails'
+  AND (
+    (storage.mime_type(name) = 'image/jpeg') 
+    OR (storage.mime_type(name) = 'image/png')
+    OR (storage.mime_type(name) = 'image/gif')
+    OR (storage.mime_type(name) = 'image/webp')
+  )
+);
+
+-- Only authenticated users can update/delete (future-proofing)
+CREATE POLICY "Allow authenticated updates" ON storage.objects 
+FOR UPDATE USING (
+  bucket_id = 'thumbnails' 
+  AND auth.role() = 'authenticated'
+);
+
+CREATE POLICY "Allow authenticated deletes" ON storage.objects 
+FOR DELETE USING (
+  bucket_id = 'thumbnails' 
+  AND auth.role() = 'authenticated'
+);
 ```
 
 3. **Configure Environment Variables**

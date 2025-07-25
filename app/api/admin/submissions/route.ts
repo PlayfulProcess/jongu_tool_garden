@@ -5,8 +5,21 @@ export async function GET(request: NextRequest) {
   try {
     // Simple password check for admin access
     const password = request.headers.get('x-admin-password')
+    const expectedPassword = process.env.ADMIN_PASSWORD
     
-    if (password !== process.env.ADMIN_PASSWORD) {
+    console.log('Admin submissions request:')
+    console.log('- Password provided:', password ? 'Yes' : 'No')
+    console.log('- Expected password set:', expectedPassword ? 'Yes' : 'No')
+    console.log('- Passwords match:', password === expectedPassword)
+    
+    if (!expectedPassword) {
+      return NextResponse.json(
+        { error: 'Admin password not configured' },
+        { status: 500 }
+      )
+    }
+    
+    if (password !== expectedPassword) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
