@@ -22,12 +22,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
     try {
       const urlObj = new URL(url)
       
-      // If it's already a direct image URL (any domain), use it
-      if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
-        return url
-      }
-      
-      // Handle Imgur URLs
+      // Handle Imgur URLs FIRST (before generic extension check)
       if (urlObj.hostname === 'imgur.com' || urlObj.hostname === 'i.imgur.com') {
         // If it's already i.imgur.com, use as-is (add extension if missing)
         if (urlObj.hostname === 'i.imgur.com') {
@@ -37,8 +32,8 @@ export default function ToolCard({ tool }: ToolCardProps) {
           return url
         }
         
-        // Convert imgur.com/xyz to i.imgur.com/xyz.jpg
-        const match = urlObj.pathname.match(/^\/([a-zA-Z0-9]+)$/)
+        // Convert imgur.com/xyz (with or without extension) to i.imgur.com/xyz.jpg
+        const match = urlObj.pathname.match(/^\/([a-zA-Z0-9]+)(\.(jpg|jpeg|png|gif|webp))?$/i)
         if (match) {
           return `https://i.imgur.com/${match[1]}.jpg`
         }
@@ -47,6 +42,11 @@ export default function ToolCard({ tool }: ToolCardProps) {
         if (urlObj.pathname.includes('/a/')) {
           return undefined
         }
+      }
+      
+      // If it's already a direct image URL from other domains, use it
+      if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
+        return url
       }
       
       // Handle other image hosting services
@@ -65,7 +65,11 @@ export default function ToolCard({ tool }: ToolCardProps) {
   
   // Debug: Log thumbnail processing
   React.useEffect(() => {
-    console.log(`[${tool.title}] Original: ${tool.thumbnail_url} -> Processed: ${thumbnailUrl}`)
+    console.log(`[DEBUG] Tool: ${tool.title}`)
+    console.log(`[DEBUG] Original URL: ${tool.thumbnail_url}`)
+    console.log(`[DEBUG] Processed URL: ${thumbnailUrl}`)
+    console.log(`[DEBUG] Will show image: ${!!thumbnailUrl}`)
+    console.log('---')
   }, [tool.title, tool.thumbnail_url, thumbnailUrl])
 
   const handleTryTool = () => {

@@ -16,8 +16,9 @@ export default function Hero({ stats }: HeroProps) {
         </h1>
         
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          Discover helpful tools from across the internet - Claude apps, calculators, worksheets, and more. 
-          Created by real people for real people.
+          Discover wellness tools organized by DBT skills: Mindfulness practices, Distress Tolerance techniques, 
+          Emotion Regulation guides, and Interpersonal Effectiveness builders. Journaling apps, creativity prompts, 
+          relationship boosters, and therapeutic exercises. Created by real people for real people.
         </p>
         
         <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto">

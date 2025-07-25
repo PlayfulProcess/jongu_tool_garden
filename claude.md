@@ -1,29 +1,4 @@
 To dos:
-a) Copilot advised me on this Supabase Schema, do you agree?
--- Create storage bucket
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('thumbnails', 'thumbnails', true);
-
--- Public read access (good as-is)
-CREATE POLICY "Public read access" ON storage.objects 
-FOR SELECT USING (bucket_id = 'thumbnails');
-
--- More secure upload policy (restrict to authenticated users)
-CREATE POLICY "Allow authenticated uploads" ON storage.objects 
-FOR INSERT WITH CHECK (
-  bucket_id = 'thumbnails' 
-  AND auth.role() = 'authenticated'
-);
-
--- Optional: Allow updates/deletes for authenticated users
-CREATE POLICY "Allow authenticated updates" ON storage.objects 
-FOR UPDATE USING (
-  bucket_id = 'thumbnails' 
-  AND auth.role() = 'authenticated'
-);
-
-CREATE POLICY "Allow authenticated deletes" ON storage.objects 
-FOR DELETE USING (
-  bucket_id = 'thumbnails' 
-  AND auth.role() = 'authenticated'
-);
+a) CHange this to something more wellness related. Maybe state out the DBT categories here? Discover helpful tools from across the internet - Claude apps, calculators, worksheets, and more. Created by real people for real people.
+b) Incldue my real Gitub link on footer https://github.com/PlayfulProcess/jongu_tool_garden
+c) advise me on why you think imagur links are still not working.... could it be a security setting?

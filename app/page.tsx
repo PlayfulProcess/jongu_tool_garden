@@ -210,7 +210,7 @@ export default function HomePage() {
             </a>
             {' • '}
             <a 
-              href="https://github.com" 
+              href="https://github.com/PlayfulProcess/jongu_tool_garden" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-primary-600 hover:text-primary-700 hover:underline"
