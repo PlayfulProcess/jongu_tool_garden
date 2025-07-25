@@ -69,7 +69,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
         setErrors(prev => ({ ...prev, thumbnail_upload: result.error || 'Upload failed' }))
         setImagePreview(null)
       } else if (result.url) {
-        setFormData(prev => ({ ...prev, thumbnail_url: result.url }))
+        setFormData(prev => ({ ...prev, thumbnail_url: result.url as string }))
         // Clear any existing URL input
         setErrors(prev => ({ ...prev, thumbnail_url: '' }))
       }
