@@ -164,8 +164,9 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
           Share Your Tool
         </h2>
         <p className="text-xl text-gray-600">
-          Found or created something helpful? Share it with the community. Whether it's a web tool, 
-          calculator, app, or worksheet - if it helps people, we want it here.
+          Found or created something that nurtures the soul? Share it with the community. Whether it's a 
+          mindful practice, healing exercise, creative expression, or wisdom guide - if it helps people 
+          live more fully, we want it here.
         </p>
       </div>
 
@@ -200,7 +201,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
             }`}
           />
           <p className="text-gray-500 text-sm mt-1">
-            💡 Share any helpful tool from the internet - web tools, apps, calculators, worksheets, etc.
+            💡 Share wisdom that transforms - guided meditations, healing practices, creative tools, reflective exercises, etc.
           </p>
           {errors.claude_url && <p className="text-red-500 text-sm mt-1">{errors.claude_url}</p>}
         </div>

@@ -1,8 +1,5 @@
 To dos:
-a) SO, the VErcel app was working with the last push (2 commits ago) with the same environmental variables and that did not change (the variables), so no need to repaste them right? The new depoyment, however failed. Build Failed
-Command "npm run build" exited with 1. Type error: Argument of type '(prev: Record<string, string>) => { thumbnail_upload: string | null; }' is not assignable to parameter of type 'SetStateAction<Record<string, string>>'.
-
-
-FOr later
-b) tools count is not counting right...Interpersonal Effectiveness
-0 tools, it should be 2...
+a) Create a new brand for development
+b) Look into the UI of categories and submissions... A couple of things I found:
+1) No error message of why form hasn't been submitted when a couple of fields or one were left blank
+2) Mindfulness is not showing with creativity when user makes a selection.... Can we change that without SUpabase changes? if so, let's change it

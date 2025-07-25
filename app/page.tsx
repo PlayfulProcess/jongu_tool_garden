@@ -180,6 +180,28 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section id="about" className="bg-gray-50 py-12">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+            About This Platform
+          </h2>
+          <div className="text-center text-gray-600 space-y-4">
+            <p>
+              This platform was inspired by Dialectical Behavior Therapy (DBT) skills, but we've added our own 
+              <a href="https://www.playfulprocess.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 font-medium mx-1">
+                PlayfulProcess
+              </a>
+              touch to make wellness more accessible and creative.
+            </p>
+            <p>
+              We believe in building gateways, not gatekeepers. Founded by PlayfulProcess, this community-driven 
+              platform welcomes tools that help people grow, heal, and connect—whether through traditional therapy 
+              techniques, creative expression, or innovative approaches to wellness.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <footer className="text-center py-10 border-t border-gray-200">
         <div className="container mx-auto px-4">
           <p className="text-gray-600 mb-2">

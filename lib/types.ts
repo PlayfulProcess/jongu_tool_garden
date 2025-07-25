@@ -65,10 +65,10 @@ export interface CategoryInfo {
 export const CATEGORIES: Record<Category, CategoryInfo> = {
   mindfulness: {
     id: 'mindfulness',
-    name: 'Mindfulness',
+    name: 'Mindfulness & Creativity',
     icon: '🧘',
     count: 0,
-    description: 'Being present, aware, and non-judgmental in the moment'
+    description: 'Being present, aware, and creative expression through art-therapy, play-therapy, and mindful practices'
   },
   'distress-tolerance': {
     id: 'distress-tolerance',

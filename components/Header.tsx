@@ -22,6 +22,9 @@ export default function Header() {
             <a href="#submit" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">
               Share a Tool
             </a>
+            <a href="#about" className="text-gray-600 hover:text-primary-600 font-medium transition-colors">
+              About
+            </a>
           </nav>
 
           {/* Mobile menu button */}
