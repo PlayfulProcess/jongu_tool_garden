@@ -96,6 +96,14 @@ public
 tmp/
 temp/
 
+# Personal notes and todos
+claude.md
+todos.md
+TODO.md
+*.todo
+notes/
+NOTES.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

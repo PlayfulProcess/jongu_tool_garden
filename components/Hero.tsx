@@ -15,9 +15,14 @@ export default function Hero({ stats }: HeroProps) {
           Community Wellness Tool Garden
         </h1>
         
-        <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+        <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           Discover helpful tools from across the internet - Claude apps, calculators, worksheets, and more. 
           Created by real people for real people.
+        </p>
+        
+        <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto">
+          🌟 Open source • Community-driven • For everyone, by everyone<br/>
+          <em>Building gateways, not gatekeepers</em>
         </p>
         
         <div className="flex flex-col md:flex-row justify-center gap-16 mb-12">

@@ -29,6 +29,7 @@ export default function HomePage() {
   const loadTools = async () => {
     try {
       const toolsData = await db.getTools({ sort: sortBy })
+      console.log('Loaded tools:', toolsData.length, toolsData)
       setTools(toolsData)
     } catch (error) {
       console.error('Error loading tools:', error)
@@ -184,6 +185,18 @@ export default function HomePage() {
             &copy; 2025 Jongu Tool Garden. Community-powered emotional wellness. Free for everyone, forever.
           </p>
           <p className="text-gray-500 text-sm mb-2">
+            Built by{' '}
+            <a 
+              href="https://www.playfulprocess.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-700 hover:underline font-medium"
+            >
+              PlayfulProcess
+            </a>
+            {' '}• Open source • Building gateways, not gatekeepers
+          </p>
+          <p className="text-gray-500 text-sm mb-2">
             🚧 Beta Version - We're constantly improving and adding new features
           </p>
           <p className="text-gray-500 text-sm">
@@ -194,6 +207,15 @@ export default function HomePage() {
               className="text-primary-600 hover:text-primary-700 hover:underline"
             >
               Contact Us
+            </a>
+            {' • '}
+            <a 
+              href="https://github.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-700 hover:underline"
+            >
+              GitHub
             </a>
           </p>
         </div>

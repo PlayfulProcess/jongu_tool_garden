@@ -1,9 +1,15 @@
 # Claude App Store - TODO List
 
-Thumbnails fix
-PEople helped = tools used fix
+  Platforms to Share:
+  - Dev.to with article: "Why We Open-Sourced Our Mental Health Platform"
+  - Reddit: r/opensource, r/mentalhealth, r/webdev
+  - Twitter/X with mental health and open source hashtags
+  - Product Hunt as "Open Source Mental Health Tool Directory"
 
-Anciety and stress and mood and depression should be the same
+  Community Building:
+  - Create GitHub Discussions for community feedback
+  - Set up contribution-friendly issues labeled "good first issue"
+  - Regular updates on progress and community impact
 
 ## 🔒 Security
 

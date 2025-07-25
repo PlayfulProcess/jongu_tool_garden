@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Tool } from '@/lib/types'
 import { generateStars, formatRating } from '@/lib/utils'
 
@@ -13,52 +13,60 @@ export default function ToolCard({ tool }: ToolCardProps) {
   const [selectedRating, setSelectedRating] = useState(0)
   const [isSubmittingRating, setIsSubmittingRating] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [imageLoading, setImageLoading] = useState(true)
 
-  // Convert Imgur URL to direct image URL
+  // Convert various image URLs to direct image URLs
   const getDirectImageUrl = (url: string | undefined) => {
     if (!url) return undefined
     
     try {
       const urlObj = new URL(url)
       
-      // If it's already a direct i.imgur.com URL, use it
-      if (urlObj.hostname === 'i.imgur.com' && url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+      // If it's already a direct image URL (any domain), use it
+      if (url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i)) {
         return url
       }
       
-      // If it's an imgur.com URL, convert to direct image URL
-      if (urlObj.hostname === 'imgur.com') {
-        // Handle imgur.com/xyz format (single image)
+      // Handle Imgur URLs
+      if (urlObj.hostname === 'imgur.com' || urlObj.hostname === 'i.imgur.com') {
+        // If it's already i.imgur.com, use as-is (add extension if missing)
+        if (urlObj.hostname === 'i.imgur.com') {
+          if (!url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+            return url + '.jpg' // Default to jpg if no extension
+          }
+          return url
+        }
+        
+        // Convert imgur.com/xyz to i.imgur.com/xyz.jpg
         const match = urlObj.pathname.match(/^\/([a-zA-Z0-9]+)$/)
         if (match) {
           return `https://i.imgur.com/${match[1]}.jpg`
         }
         
-        // Handle imgur.com/a/xyz format (album - use first image)
-        const albumMatch = urlObj.pathname.match(/^\/a\/([a-zA-Z0-9]+)$/)
-        if (albumMatch) {
-          // For albums, we can't easily get the first image without API
-          // Return undefined to fall back to gradient
+        // Skip albums for now
+        if (urlObj.pathname.includes('/a/')) {
           return undefined
         }
       }
       
-      // If it's already a direct image URL from any domain, use it
-      if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+      // Handle other image hosting services
+      const imageHosts = ['i.redd.it', 'raw.githubusercontent.com', 'github.com', 'media.giphy.com', 'i.giphy.com']
+      if (imageHosts.some(host => urlObj.hostname.includes(host))) {
         return url
       }
       
       return undefined
     } catch (error) {
-      console.error('Error parsing image URL:', error)
       return undefined
     }
   }
 
   const thumbnailUrl = getDirectImageUrl(tool.thumbnail_url)
   
-  // Debug logging
-  console.log('Tool:', tool.title, 'Original URL:', tool.thumbnail_url, 'Processed URL:', thumbnailUrl)
+  // Debug: Log thumbnail processing
+  React.useEffect(() => {
+    console.log(`[${tool.title}] Original: ${tool.thumbnail_url} -> Processed: ${thumbnailUrl}`)
+  }, [tool.title, tool.thumbnail_url, thumbnailUrl])
 
   const handleTryTool = () => {
     // Track click
@@ -122,15 +130,15 @@ export default function ToolCard({ tool }: ToolCardProps) {
               src={thumbnailUrl}
               alt={tool.title}
               className="absolute inset-0 w-full h-full object-cover"
-              onError={() => {
-                console.log('Image failed to load:', thumbnailUrl)
-                setImageError(true)
-              }}
-              onLoad={() => {
-                console.log('Image loaded successfully:', thumbnailUrl)
-              }}
+              onError={() => setImageError(true)}
+              onLoad={() => setImageLoading(false)}
             />
             <div className="absolute inset-0 bg-gradient-to-br from-primary-500/30 to-secondary-500/30" />
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              </div>
+            )}
           </>
         ) : (
           <div className="relative z-10 text-white">

@@ -1,6 +1,12 @@
-# Jongu Tool Garden 🌱
+# 🌱 Jongu Tool Garden
 
-A community-powered platform for sharing and discovering emotional wellness tools created by therapists, parents, and wellness enthusiasts.
+> **Building gateways, not gatekeepers** - A community-driven wellness tool directory
+
+![Open Source](https://img.shields.io/badge/Open%20Source-❤️-green) ![Mental Health](https://img.shields.io/badge/Mental%20Health-For%20Everyone-blue) ![Community](https://img.shields.io/badge/Community-Driven-purple)
+
+A community-powered platform for sharing and discovering emotional wellness tools from across the internet. Whether it's a Claude app, calculator, worksheet, or any other digital tool - if it helps people, we want it here.
+
+**Our Philosophy:** We believe mental health resources should be accessible to everyone. Instead of being gatekeepers who control access, we're building gateways that connect people with the tools they need.
 
 ## ⚠️ Security Notice
 
@@ -57,7 +63,7 @@ CREATE TABLE tools (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   title TEXT NOT NULL,
   claude_url TEXT NOT NULL,
-  category TEXT NOT NULL CHECK (category IN ('anxiety', 'mood', 'relationships', 'parenting', 'mindfulness', 'growth')),
+  category TEXT NOT NULL CHECK (category IN ('mindfulness', 'distress-tolerance', 'emotion-regulation', 'interpersonal-effectiveness')),
   description TEXT NOT NULL,
   creator_name TEXT NOT NULL,
   creator_link TEXT,
@@ -325,4 +331,39 @@ For questions or issues:
 
 ---
 
-**Built with ❤️ for the wellness community** 
+## 🎯 Mission & Vision
+
+**Mission**: To democratize access to mental health and wellness tools by creating an open, community-driven platform that connects people with resources that actually help.
+
+**Vision**: A world where mental health support is accessible, diverse, and community-powered - where we build gateways instead of gatekeeping access to wellness.
+
+## 🏆 Inspiration
+
+This project is inspired by the Ghost foundation model - an NGO that believes in open source, community ownership, and putting mission before profit. Just like Ghost revolutionized publishing, we want to revolutionize how people discover and share mental health tools.
+
+Read more about our philosophy: [Following What Feels Right is a Process](https://www.playfulprocess.com/following-what-feels-right-is-a-process-indie-hacking/)
+
+## 👥 Built By
+
+**[PlayfulProcess](https://www.playfulprocess.com)** - Building gateways, not gatekeepers.
+
+Founded by someone who paused their Masters in MFT because they didn't want to be a gatekeeper, but rather a gateway builder for mental health resources.
+
+## 🤝 Contributing
+
+We believe in the power of community! Whether you're a developer, designer, mental health professional, or someone passionate about wellness - there's a place for you here.
+
+### Ways to Contribute
+
+- 🐛 **Report bugs** or suggest features via [Issues](../../issues)
+- 🔧 **Fix bugs** or implement features via Pull Requests
+- 📝 **Improve documentation** 
+- 🎨 **Design improvements** for better UX
+- 🔍 **Curate tools** by submitting helpful resources
+- 💬 **Join discussions** about mental health and technology
+
+---
+
+**Built with ❤️ for the wellness community by [PlayfulProcess](https://www.playfulprocess.com)**
+
+**⭐ If this project helps you or others, please give it a star! It helps us reach more people who might benefit from these tools.** 
