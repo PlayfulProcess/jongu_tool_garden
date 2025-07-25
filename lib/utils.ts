@@ -28,11 +28,11 @@ export function validateSubmission(data: any): { valid: boolean; errors: string[
     errors.push('Title must be between 3 and 255 characters')
   }
   
-  if (!data.claude_url || !validateClaudeUrl(data.claude_url)) {
-    errors.push('Must be a valid Claude.ai URL')
+  if (!data.claude_url || !isValidUrl(data.claude_url)) {
+    errors.push('Must be a valid URL')
   }
   
-  if (!data.category || !['anxiety', 'mood', 'relationships', 'parenting', 'mindfulness', 'growth'].includes(data.category)) {
+  if (!data.category || !['mindfulness', 'distress-tolerance', 'emotion-regulation', 'interpersonal-effectiveness'].includes(data.category)) {
     errors.push('Invalid category')
   }
   
@@ -63,8 +63,23 @@ function isValidUrl(url: string): boolean {
 export function validateImgurUrl(url: string): boolean {
   try {
     const urlObj = new URL(url)
-    return urlObj.hostname === 'i.imgur.com' ||
-           urlObj.hostname === 'imgur.com'
+    // Allow common image hosting domains
+    const allowedDomains = [
+      'i.imgur.com',
+      'imgur.com',
+      'i.redd.it',
+      'github.com',
+      'raw.githubusercontent.com',
+      'media.giphy.com',
+      'i.giphy.com'
+    ]
+    
+    const isAllowedDomain = allowedDomains.some(domain => 
+      urlObj.hostname === domain || urlObj.hostname.endsWith('.' + domain)
+    )
+    
+    // Must be from allowed domain OR be a direct image URL
+    return isAllowedDomain || url.match(/\.(jpg|jpeg|png|gif|webp)$/i) !== null
   } catch {
     return false
   }

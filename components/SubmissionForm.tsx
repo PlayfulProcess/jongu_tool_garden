@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { SubmissionFormData, CATEGORIES } from '@/lib/types'
-import { validateClaudeUrl, validateImgurUrl } from '@/lib/utils'
+import { validateImgurUrl } from '@/lib/utils'
 
 interface SubmissionFormProps {
   onSubmit: (data: SubmissionFormData) => Promise<boolean>;
@@ -22,6 +22,15 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  const isValidUrl = (url: string): boolean => {
+    try {
+      new URL(url)
+      return true
+    } catch {
+      return false
+    }
+  }
+
   const handleChange = (field: keyof SubmissionFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
@@ -38,9 +47,9 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
     }
 
     if (!formData.claude_url.trim()) {
-      newErrors.claude_url = 'Claude URL is required'
-    } else if (!validateClaudeUrl(formData.claude_url)) {
-      newErrors.claude_url = 'Please enter a valid Claude.ai URL'
+      newErrors.claude_url = 'Tool URL is required'
+    } else if (!isValidUrl(formData.claude_url)) {
+      newErrors.claude_url = 'Please enter a valid URL'
     }
 
     if (!formData.category) {
@@ -98,8 +107,8 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
           Share Your Tool
         </h2>
         <p className="text-xl text-gray-600">
-          Created something helpful? Share it with the community. Whether you're a therapist, 
-          student, parent, or wellness enthusiast - if it helps people, we want it here.
+          Found or created something helpful? Share it with the community. Whether it's a Claude app, 
+          web tool, calculator, or worksheet - if it helps people, we want it here.
         </p>
       </div>
 
@@ -122,17 +131,20 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
 
         <div>
           <label className="block font-semibold text-gray-700 mb-2">
-            Claude Artifact URL
+            Tool URL
           </label>
           <input
             type="url"
             value={formData.claude_url}
             onChange={(e) => handleChange('claude_url', e.target.value)}
-            placeholder="https://claude.ai/chat/..."
+            placeholder="https://example.com/your-tool..."
             className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors ${
               errors.claude_url ? 'border-red-500' : 'border-gray-200 focus:border-primary-500'
             }`}
           />
+          <p className="text-gray-500 text-sm mt-1">
+            💡 Share any helpful tool from the internet - Claude apps, web tools, calculators, worksheets, etc.
+          </p>
           {errors.claude_url && <p className="text-red-500 text-sm mt-1">{errors.claude_url}</p>}
         </div>
 
@@ -226,7 +238,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
             type="url"
             value={formData.thumbnail_url}
             onChange={(e) => handleChange('thumbnail_url', e.target.value)}
-            placeholder="Imgur link (e.g., https://i.imgur.com/abc123.png)"
+            placeholder="Direct image link (e.g., https://i.imgur.com/abc123.png)"
             className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition-colors ${
               errors.thumbnail_url ? 'border-red-500' : 'border-gray-200 focus:border-primary-500'
             }`}
@@ -236,7 +248,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
             <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">
               imgur.com
             </a>
-            {' '}and paste the direct link here. Makes your tool stand out!
+            {' '}or another image host and paste the direct link here. Makes your tool stand out!
           </p>
           {errors.thumbnail_url && <p className="text-red-500 text-sm mt-1">{errors.thumbnail_url}</p>}
         </div>

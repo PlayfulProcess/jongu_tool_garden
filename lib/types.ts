@@ -52,7 +52,7 @@ export interface SubmissionFormData {
   thumbnail_url?: string;
 }
 
-export type Category = 'anxiety' | 'mood' | 'relationships' | 'parenting' | 'mindfulness' | 'growth';
+export type Category = 'mindfulness' | 'distress-tolerance' | 'emotion-regulation' | 'interpersonal-effectiveness';
 
 export interface CategoryInfo {
   id: Category;
@@ -63,46 +63,32 @@ export interface CategoryInfo {
 }
 
 export const CATEGORIES: Record<Category, CategoryInfo> = {
-  anxiety: {
-    id: 'anxiety',
-    name: 'Anxiety & Stress',
-    icon: '😰',
-    count: 32,
-    description: 'Tools for managing anxiety and stress'
-  },
-  mood: {
-    id: 'mood',
-    name: 'Mood & Depression',
-    icon: '🌧️',
-    count: 18,
-    description: 'Tools for improving mood and managing depression'
-  },
-  relationships: {
-    id: 'relationships',
-    name: 'Relationships',
-    icon: '💕',
-    count: 24,
-    description: 'Tools for building and maintaining healthy relationships'
-  },
-  parenting: {
-    id: 'parenting',
-    name: 'Parenting & Family',
-    icon: '👨‍👩‍👧‍👦',
-    count: 29,
-    description: 'Tools for parents and family dynamics'
-  },
   mindfulness: {
     id: 'mindfulness',
     name: 'Mindfulness',
     icon: '🧘',
-    count: 25,
-    description: 'Mindfulness and meditation practices'
+    count: 0,
+    description: 'Being present, aware, and non-judgmental in the moment'
   },
-  growth: {
-    id: 'growth',
-    name: 'Personal Growth',
-    icon: '✨',
-    count: 19,
-    description: 'Tools for personal development and growth'
+  'distress-tolerance': {
+    id: 'distress-tolerance',
+    name: 'Distress Tolerance',
+    icon: '🛡️',
+    count: 0,
+    description: 'Skills to survive crises and tolerate distressing emotions'
+  },
+  'emotion-regulation': {
+    id: 'emotion-regulation',
+    name: 'Emotion Regulation',
+    icon: '🎭',
+    count: 0,
+    description: 'Understanding and managing emotions effectively'
+  },
+  'interpersonal-effectiveness': {
+    id: 'interpersonal-effectiveness',
+    name: 'Interpersonal Effectiveness',
+    icon: '🤝',
+    count: 0,
+    description: 'Building healthy relationships and communicating effectively'
   }
 }; 

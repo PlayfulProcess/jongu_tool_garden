@@ -12,26 +12,53 @@ export default function ToolCard({ tool }: ToolCardProps) {
   const [showRating, setShowRating] = useState(false)
   const [selectedRating, setSelectedRating] = useState(0)
   const [isSubmittingRating, setIsSubmittingRating] = useState(false)
+  const [imageError, setImageError] = useState(false)
 
-  // Convert Imgur album URL to direct image URL
+  // Convert Imgur URL to direct image URL
   const getDirectImageUrl = (url: string | undefined) => {
     if (!url) return undefined
     
-    // If it's an Imgur album link, convert to direct image URL
-    if (url.includes('imgur.com/a/')) {
-      // This is a fallback - ideally users should provide direct image URLs
-      return undefined // For now, fall back to default gradient
+    try {
+      const urlObj = new URL(url)
+      
+      // If it's already a direct i.imgur.com URL, use it
+      if (urlObj.hostname === 'i.imgur.com' && url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+        return url
+      }
+      
+      // If it's an imgur.com URL, convert to direct image URL
+      if (urlObj.hostname === 'imgur.com') {
+        // Handle imgur.com/xyz format (single image)
+        const match = urlObj.pathname.match(/^\/([a-zA-Z0-9]+)$/)
+        if (match) {
+          return `https://i.imgur.com/${match[1]}.jpg`
+        }
+        
+        // Handle imgur.com/a/xyz format (album - use first image)
+        const albumMatch = urlObj.pathname.match(/^\/a\/([a-zA-Z0-9]+)$/)
+        if (albumMatch) {
+          // For albums, we can't easily get the first image without API
+          // Return undefined to fall back to gradient
+          return undefined
+        }
+      }
+      
+      // If it's already a direct image URL from any domain, use it
+      if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+        return url
+      }
+      
+      return undefined
+    } catch (error) {
+      console.error('Error parsing image URL:', error)
+      return undefined
     }
-    
-    // If it's already a direct image URL, use it
-    if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-      return url
-    }
-    
-    return undefined
   }
 
   const thumbnailUrl = getDirectImageUrl(tool.thumbnail_url)
+  
+  // Debug logging
+  console.log('Tool:', tool.title, 'Original URL:', tool.thumbnail_url, 'Processed URL:', thumbnailUrl)
 
   const handleTryTool = () => {
     // Track click
@@ -88,20 +115,28 @@ export default function ToolCard({ tool }: ToolCardProps) {
 
   return (
     <div className="tool-card">
-      <div 
-        className={`h-40 flex items-center justify-center text-5xl relative overflow-hidden ${
-          thumbnailUrl 
-            ? 'bg-cover bg-center' 
-            : 'bg-gradient-to-br from-primary-500 to-secondary-500'
-        }`}
-        style={thumbnailUrl ? { backgroundImage: `url(${thumbnailUrl})` } : {}}
-      >
-        {thumbnailUrl && (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/30 to-secondary-500/30" />
+      <div className="h-40 flex items-center justify-center text-5xl relative overflow-hidden bg-gradient-to-br from-primary-500 to-secondary-500">
+        {thumbnailUrl && !imageError ? (
+          <>
+            <img 
+              src={thumbnailUrl}
+              alt={tool.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={() => {
+                console.log('Image failed to load:', thumbnailUrl)
+                setImageError(true)
+              }}
+              onLoad={() => {
+                console.log('Image loaded successfully:', thumbnailUrl)
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/30 to-secondary-500/30" />
+          </>
+        ) : (
+          <div className="relative z-10 text-white">
+            🌸
+          </div>
         )}
-        <div className="relative z-10 text-white">
-          {!thumbnailUrl && '🌸'}
-        </div>
       </div>
       
       <div className="p-6">

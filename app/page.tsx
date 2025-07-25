@@ -67,26 +67,20 @@ export default function HomePage() {
     setFilteredTools(filtered)
   }
 
-  const handleCategorySelect = (category: Category) => {
-    setSelectedCategory(selectedCategory === category ? null : category)
+  const handleCategorySelect = (category: Category | null) => {
+    setSelectedCategory(category)
   }
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
   }
 
-  const handleSortChange = () => {
-    const sortOptions: Array<'rating' | 'newest' | 'popular'> = ['rating', 'newest', 'popular']
-    const currentIndex = sortOptions.indexOf(sortBy)
-    const nextIndex = (currentIndex + 1) % sortOptions.length
-    setSortBy(sortOptions[nextIndex])
-  }
 
   const handleToolSubmit = async (formData: any) => {
     try {
       const success = await db.submitTool(formData)
       if (success) {
-        alert('🎉 Thank you! Your tool has been submitted and will appear once reviewed (usually within 24 hours).')
+        alert('🎉 Thank you! Your tool has been submitted and will appear once reviewed (usually within 1 week).')
         return true
       } else {
         alert('❌ There was an error submitting your tool. Please try again.')
@@ -101,7 +95,6 @@ export default function HomePage() {
 
   const stats = {
     totalTools: tools.length,
-    totalRatings: Math.max(tools.reduce((sum, tool) => sum + tool.total_ratings, 0), tools.reduce((sum, tool) => sum + tool.view_count, 0)),
     avgRating: tools.length > 0 
       ? (tools.reduce((sum, tool) => sum + tool.avg_rating * tool.total_ratings, 0) / Math.max(tools.reduce((sum, tool) => sum + tool.total_ratings, 0), 1)).toFixed(1)
       : '0.0'
@@ -114,12 +107,6 @@ export default function HomePage() {
       <main>
         <Hero stats={stats} />
         
-        <section className="mb-12">
-          <div className="container mx-auto px-4">
-            <SearchBar onSearch={handleSearch} />
-          </div>
-        </section>
-
         <section id="categories" className="mb-16">
           <div className="container mx-auto px-4">
             <CategoryGrid 
@@ -131,18 +118,46 @@ export default function HomePage() {
 
         <section id="tools" className="mb-20">
           <div className="container mx-auto px-4">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 text-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <h2 className="text-3xl font-bold text-gray-800">
                 Community Tools
               </h2>
-              <button 
-                onClick={handleSortChange}
-                className="btn-secondary"
-              >
-                {sortBy === 'rating' && '📊 Sort by Rating'}
-                {sortBy === 'newest' && '📅 Sort by Newest'}
-                {sortBy === 'popular' && '🔥 Sort by Popular'}
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button 
+                  onClick={() => setSortBy('rating')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    sortBy === 'rating' 
+                      ? 'bg-primary-600 text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📊 By Rating
+                </button>
+                <button 
+                  onClick={() => setSortBy('newest')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    sortBy === 'newest' 
+                      ? 'bg-primary-600 text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  📅 Newest
+                </button>
+                <button 
+                  onClick={() => setSortBy('popular')}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    sortBy === 'popular' 
+                      ? 'bg-primary-600 text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  🔥 Popular
+                </button>
+              </div>
+            </div>
+            
+            <div className="mb-6">
+              <SearchBar onSearch={handleSearch} />
             </div>
             
             {loading ? (
@@ -165,8 +180,21 @@ export default function HomePage() {
 
       <footer className="text-center py-10 border-t border-gray-200">
         <div className="container mx-auto px-4">
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-2">
             &copy; 2025 Jongu Tool Garden. Community-powered emotional wellness. Free for everyone, forever.
+          </p>
+          <p className="text-gray-500 text-sm mb-2">
+            🚧 Beta Version - We're constantly improving and adding new features
+          </p>
+          <p className="text-gray-500 text-sm">
+            <a 
+              href="https://www.playfulprocess.com/contact/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary-600 hover:text-primary-700 hover:underline"
+            >
+              Contact Us
+            </a>
           </p>
         </div>
       </footer>

@@ -4,7 +4,7 @@ import { Category, CATEGORIES } from '@/lib/types'
 
 interface CategoryGridProps {
   selectedCategory: Category | null;
-  onCategorySelect: (category: Category) => void;
+  onCategorySelect: (category: Category | null) => void;
 }
 
 export default function CategoryGrid({ selectedCategory, onCategorySelect }: CategoryGridProps) {
@@ -14,7 +14,25 @@ export default function CategoryGrid({ selectedCategory, onCategorySelect }: Cat
         Browse by Category
       </h2>
       
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        {/* All Categories Button */}
+        <div
+          onClick={() => onCategorySelect(null)}
+          className={`category-card ${
+            selectedCategory === null 
+              ? 'border-primary-500 bg-primary-50' 
+              : ''
+          }`}
+        >
+          <span className="text-4xl mb-4 block">🌟</span>
+          <div className="font-semibold text-gray-800 mb-2">
+            All Tools
+          </div>
+          <div className="text-gray-500 text-sm">
+            View all
+          </div>
+        </div>
+        
         {Object.values(CATEGORIES).map((category) => (
           <div
             key={category.id}

@@ -3,6 +3,8 @@
 Thumbnails fix
 PEople helped = tools used fix
 
+Anciety and stress and mood and depression should be the same
+
 ## 🔒 Security
 
 ## 🚨 CRITICAL - Before GitHub Public Push:

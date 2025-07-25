@@ -21,17 +21,15 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Search tools by topic, feeling, or creator..."
-          className="w-full max-w-2xl px-6 py-4 border-2 border-gray-200 rounded-full text-center text-lg focus:outline-none focus:border-primary-500 transition-colors"
-        />
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="flex justify-center">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyPress={handleKeyPress}
+        placeholder="Search tools..."
+        className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-colors"
+      />
+    </form>
   )
 } 

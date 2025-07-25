@@ -1,6 +1,8 @@
 To dos:
-1) Thumbnaisl imagur images are not showing, fix that
-2) Take away number of people helped, since there is no authentication and no way of verifying
-3) Sort by rating is being smaller to largest, it should be the other way around
-4) I want it to be any tool in the internet, not just claude app. So allow for any links to be pasted and change the language apropriately from the field: Claude Artifact URL
-5) Vercel is not working with current environment variables, help me debug
+1) Commit changes
+2) Thumbnails are still not showing in home page
+3) Advise me on how to open source this. If it is safe to make it public on Github I will want to:
+a) make it public
+b) make it clear that is open source
+c) document it well, as well as how to collaborate
+d) market it as open source because we believe in the cause and we are inspired by Ghost model of an NGO +Open Source. link this: https://www.playfulprocess.com/following-what-feels-right-is-a-process-indie-hacking/
