@@ -164,8 +164,8 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
           Share Your Tool
         </h2>
         <p className="text-xl text-gray-600">
-          Found or created something helpful? Share it with the community. Whether it's a Claude app, 
-          web tool, calculator, or worksheet - if it helps people, we want it here.
+          Found or created something helpful? Share it with the community. Whether it's a web tool, 
+          calculator, app, or worksheet - if it helps people, we want it here.
         </p>
       </div>
 
@@ -200,7 +200,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
             }`}
           />
           <p className="text-gray-500 text-sm mt-1">
-            💡 Share any helpful tool from the internet - Claude apps, web tools, calculators, worksheets, etc.
+            💡 Share any helpful tool from the internet - web tools, apps, calculators, worksheets, etc.
           </p>
           {errors.claude_url && <p className="text-red-500 text-sm mt-1">{errors.claude_url}</p>}
         </div>
