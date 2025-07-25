@@ -77,7 +77,7 @@ export default function AdminPage() {
       
       if (response.ok) {
         alert('Tool approved!')
-        loadSubmissions() // adminPassword should be set by now
+        loadSubmissions(adminPassword)
       } else {
         const error = await response.json()
         alert('Failed to approve tool: ' + (error.error || 'Unknown error'))
@@ -101,7 +101,7 @@ export default function AdminPage() {
       
       if (response.ok) {
         alert('Tool rejected')
-        loadSubmissions()
+        loadSubmissions(adminPassword)
       } else {
         const error = await response.json()
         alert('Failed to reject tool: ' + (error.error || 'Unknown error'))
