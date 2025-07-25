@@ -7,7 +7,7 @@ import SearchBar from '@/components/SearchBar'
 import CategoryGrid from '@/components/CategoryGrid'
 import ToolGrid from '@/components/ToolGrid'
 import SubmissionForm from '@/components/SubmissionForm'
-import { Tool, Category } from '@/lib/types'
+import { Tool, Category, CATEGORIES } from '@/lib/types'
 import { db } from '@/lib/supabase'
 
 export default function HomePage() {
@@ -121,9 +121,16 @@ export default function HomePage() {
         <section id="tools" className="mb-20">
           <div className="container mx-auto px-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <h2 className="text-3xl font-bold text-gray-800">
-                Community Tools
-              </h2>
+              <div>
+                <h2 className="text-3xl font-bold text-gray-800">
+                  Community Tools
+                </h2>
+                {selectedCategory && (
+                  <p className="text-lg text-gray-600 mt-1">
+                    {CATEGORIES[selectedCategory].name} Tools
+                  </p>
+                )}
+              </div>
               <div className="flex flex-wrap gap-2">
                 <button 
                   onClick={() => setSortBy('rating')}

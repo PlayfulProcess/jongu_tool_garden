@@ -122,7 +122,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
     }
 
     if (formData.thumbnail_url && !validateImgurUrl(formData.thumbnail_url)) {
-      newErrors.thumbnail_url = 'Please enter a valid Imgur URL'
+      newErrors.thumbnail_url = 'Please enter a valid image URL (supported: Imgur, GitHub, Giphy, Reddit, or direct image links)'
     }
 
     setErrors(newErrors)
