@@ -66,7 +66,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
       const result = await db.uploadThumbnail(file)
       
       if (result.error) {
-        setErrors(prev => ({ ...prev, thumbnail_upload: result.error }))
+        setErrors(prev => ({ ...prev, thumbnail_upload: result.error || 'Upload failed' }))
         setImagePreview(null)
       } else if (result.url) {
         setFormData(prev => ({ ...prev, thumbnail_url: result.url }))
