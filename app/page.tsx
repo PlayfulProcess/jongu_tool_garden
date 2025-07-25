@@ -182,7 +182,7 @@ export default function HomePage() {
       <footer className="text-center py-10 border-t border-gray-200">
         <div className="container mx-auto px-4">
           <p className="text-gray-600 mb-2">
-            &copy; 2025 Jongu Tool Garden. Community-powered emotional wellness. Free for everyone, forever.
+            &copy; 2025 Jongu Tool Garden. Community-powered emotional wellness.
           </p>
           <p className="text-gray-500 text-sm mb-2">
             Built by{' '}
