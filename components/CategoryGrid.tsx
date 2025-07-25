@@ -1,13 +1,18 @@
 'use client'
 
-import { Category, CATEGORIES } from '@/lib/types'
+import { Category, CATEGORIES, Tool } from '@/lib/types'
 
 interface CategoryGridProps {
   selectedCategory: Category | null;
   onCategorySelect: (category: Category | null) => void;
+  tools: Tool[];
 }
 
-export default function CategoryGrid({ selectedCategory, onCategorySelect }: CategoryGridProps) {
+export default function CategoryGrid({ selectedCategory, onCategorySelect, tools }: CategoryGridProps) {
+  // Calculate category counts
+  const getCategoryCount = (categoryId: Category) => {
+    return tools.filter(tool => tool.category === categoryId).length
+  }
   return (
     <div>
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
@@ -48,7 +53,7 @@ export default function CategoryGrid({ selectedCategory, onCategorySelect }: Cat
               {category.name}
             </div>
             <div className="text-gray-500 text-sm">
-              {category.count} tools
+              {getCategoryCount(category.id)} tools
             </div>
           </div>
         ))}

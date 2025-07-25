@@ -113,6 +113,7 @@ export default function HomePage() {
             <CategoryGrid 
               selectedCategory={selectedCategory}
               onCategorySelect={handleCategorySelect}
+              tools={tools}
             />
           </div>
         </section>
