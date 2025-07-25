@@ -153,7 +153,7 @@ export default function AdminPage() {
             Admin Panel - Pending Submissions
           </h1>
           <button
-            onClick={loadSubmissions}
+            onClick={() => loadSubmissions()}
             className="btn-secondary"
             disabled={loading}
           >
@@ -218,4 +218,4 @@ export default function AdminPage() {
       </div>
     </div>
   )
-} 
+}
