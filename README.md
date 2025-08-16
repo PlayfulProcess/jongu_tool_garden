@@ -1,6 +1,8 @@
 # 🌱 Jongu Tool Garden
 
 > **Building gateways, not gatekeepers** - A community-driven wellness tool directory
+>
+> A first draft of what became www.jongu.org channels.
 
 ![Open Source](https://img.shields.io/badge/Open%20Source-❤️-green) ![Mental Health](https://img.shields.io/badge/Mental%20Health-For%20Everyone-blue) ![Community](https://img.shields.io/badge/Community-Driven-purple)
 
